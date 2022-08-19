@@ -1,9 +1,12 @@
+require 'weather_api'
+
 class TrafficInterface
-    def initialize
+    def initialize(weather)
+        @weather = weather
     end
 
     def request_land(plane, airport)
-        #if checks pass then land plane
+        check_weather
         if airport.has_capacity
           airport.land_plane(plane)
         else
@@ -12,7 +15,13 @@ class TrafficInterface
     end
 
     def request_takeoff(plane, airport)
-      #if weather checks out
-      airport.take_off(plane)
+        check_weather
+        airport.take_off(plane)
+    end
+
+    private
+
+    def check_weather
+        fail "Weather is stormy, can't take-off" if @weather.check_weather == :stormy
     end
 end
